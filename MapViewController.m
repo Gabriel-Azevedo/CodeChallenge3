@@ -15,7 +15,8 @@
 
 @property CLLocationManager *locationManager;
 @property CLLocation *currentLocation;
-
+@property NSString *allSteps;
+@property UIAlertView *alert;
 
 @end
 
@@ -48,11 +49,11 @@
 
 -(void)mapView:(MKMapView *)mapView annotationView:(MKAnnotationView *)view calloutAccessoryControlTapped:(UIControl *)control
 {
-    UIAlertView *alert = [UIAlertView new];
-    alert.title = @"GEO Code Error";
-    [alert addButtonWithTitle:@"Dismiss"];
-    [alert show];
     [self getPathDirectionswithDestination];
+
+    self.alert = [UIAlertView new];
+    [self.alert addButtonWithTitle:@"Dismiss"];
+
 }
 
 -(void)pinStation
@@ -76,46 +77,33 @@
 
 -(void) getPathDirectionswithDestination
 {
-
-    NSLog(@"source = %f, %f",self.station.userCurrentLocation.coordinate.latitude, self.station.userCurrentLocation.coordinate.longitude);
-
-    CLLocationCoordinate2D sourceCoordinate = CLLocationCoordinate2DMake(self.currentLocation.coordinate.latitude, self.currentLocation.coordinate.longitude);
-    MKPlacemark *placemarkSrc = [[MKPlacemark alloc] initWithCoordinate:sourceCoordinate addressDictionary:[NSDictionary dictionaryWithObjectsAndKeys:@"", @"", nil]];
-    MKMapItem *destination = [[MKMapItem alloc] initWithPlacemark:placemarkSrc];
-    [destination setName:@""];
-
-    NSLog(@"dest = %f, %f", [self.station.latitude doubleValue], [self.station.longitude doubleValue]);
-
-    CLLocationDegrees latitude = [self.station.latitude doubleValue];
-    CLLocationDegrees longitude = [self.station.longitude doubleValue];
+    CLLocationDegrees latitude = [self.station.latitude floatValue];
+    CLLocationDegrees longitude = [self.station.longitude floatValue];
     CLLocationCoordinate2D destinationCoordinate = CLLocationCoordinate2DMake(latitude, longitude);
-    MKPlacemark *placemarkDest = [[MKPlacemark alloc] initWithCoordinate:destinationCoordinate addressDictionary:[NSDictionary dictionaryWithObjectsAndKeys:@"", @"", nil]];
-    MKMapItem *source = [[MKMapItem alloc] initWithPlacemark:placemarkDest];
-    [source setName:@""];
-
+    MKPlacemark *placemarkDest = [[MKPlacemark alloc] initWithCoordinate:destinationCoordinate addressDictionary:nil];
+    MKMapItem *destination = [[MKMapItem alloc] initWithPlacemark:placemarkDest];
 
     MKDirectionsRequest *request = [[MKDirectionsRequest alloc] init];
-    [request setSource:source];
+    [request setSource:[MKMapItem mapItemForCurrentLocation]];
     [request setDestination:destination];
     [request setTransportType:MKDirectionsTransportTypeWalking];
-    //request.requestsAlternateRoutes = NO;
-
 
     MKDirections *directions = [[MKDirections alloc] initWithRequest:request];
 
     [directions calculateDirectionsWithCompletionHandler:^(MKDirectionsResponse *response, NSError *error) {
         MKRoute *route = response.routes.lastObject;
 
-        NSString *allSteps = [NSString new];
+        self.allSteps = [NSString new];
 
         for (int i = 0; i < route.steps.count; i++)
         {
             MKRouteStep *step = [route.steps objectAtIndex:i];
             NSString *newStepString = step.instructions;
-            allSteps = [allSteps stringByAppendingString:newStepString];
-            allSteps = [allSteps stringByAppendingString:@"\n\n"];
+            self.allSteps = [self.allSteps stringByAppendingString:newStepString];
+            self.allSteps = [self.allSteps stringByAppendingString:@"\n\n"];
         }
-        NSLog(@"%@",[NSString stringWithFormat:@"%@", allSteps]);
+        self.alert.message = self.allSteps;
+        [self.alert show];
     }];
 }
 
