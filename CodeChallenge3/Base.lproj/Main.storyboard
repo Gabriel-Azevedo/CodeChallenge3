@@ -26,7 +26,7 @@
                                     <textInputTraits key="textInputTraits"/>
                                 </searchBar>
                                 <prototypes>
-                                    <tableViewCell contentMode="scaleToFill" selectionStyle="default" indentationWidth="10" reuseIdentifier="Cell" textLabel="gsd-AE-h5L" detailTextLabel="eri-8C-H8Q" rowHeight="50" style="IBUITableViewCellStyleSubtitle" id="TdW-st-Bf8">
+                                    <tableViewCell contentMode="scaleToFill" selectionStyle="default" indentationWidth="10" reuseIdentifier="Cell" textLabel="gsd-AE-h5L" detailTextLabel="eri-8C-H8Q" imageView="4lW-CY-5iL" rowHeight="50" style="IBUITableViewCellStyleSubtitle" id="TdW-st-Bf8">
                                         <rect key="frame" x="0.0" y="0.0" width="600" height="44"/>
                                         <autoresizingMask key="autoresizingMask"/>
                                         <tableViewCellContentView key="contentView" opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center" tableViewCell="TdW-st-Bf8" id="O50-aE-uIy">
@@ -44,6 +44,9 @@
                                                     <color key="textColor" cocoaTouchSystemColor="darkTextColor"/>
                                                     <nil key="highlightedColor"/>
                                                 </label>
+                                                <imageView opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="scaleToFill" image="bikeImage" id="4lW-CY-5iL">
+                                                    <autoresizingMask key="autoresizingMask"/>
+                                                </imageView>
                                             </subviews>
                                         </tableViewCellContentView>
                                         <connections>
@@ -134,4 +137,7 @@
             <point key="canvasLocation" x="341" y="339"/>
         </scene>
     </scenes>
+    <resources>
+        <image name="bikeImage" width="32" height="20"/>
+    </resources>
 </document>
